@@ -1,1 +1,465 @@
-<!DOCTYPE html><html><head><title>Clínica Consciência & Harmonia</title></head><body><div id='root'></div></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agenda | Clínica Consciência &amp; Harmonia</title>
+  <style>
+    :root {
+      --azul: #2f70af;
+      --azul-escuro: #1b4f86;
+      --cinza-claro: #f4f7fb;
+      --cinza: #e5e9f0;
+      --texto: #1f2933;
+      --sucesso: #1d9d65;
+      --erro: #d64550;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 10% 20%, #e4f0ff 10%, transparent 20%),
+        radial-gradient(circle at 90% 10%, #f4e8ff 12%, transparent 22%),
+        linear-gradient(180deg, #f7fbff 0%, #f0f4fa 60%, #e8eef7 100%);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    header {
+      background: white;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid var(--cinza);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--azul), var(--azul-escuro));
+      color: white;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .titulo {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .titulo h1 {
+      margin: 0;
+      font-size: 1.15rem;
+      letter-spacing: 0.2px;
+    }
+
+    .titulo span {
+      font-size: 0.9rem;
+      color: #51606f;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto 80px;
+      padding: 0 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--cinza);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 12px 28px rgba(41, 72, 120, 0.07);
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      font-size: 0.92rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      color: #3b4a5a;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--cinza);
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--azul);
+      box-shadow: 0 0 0 3px rgba(47, 112, 175, 0.18);
+    }
+
+    button {
+      border: none;
+      color: white;
+      background: linear-gradient(135deg, var(--azul), var(--azul-escuro));
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(47, 112, 175, 0.25);
+    }
+
+    .btn-secondary {
+      background: #51606f;
+    }
+
+    .status {
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    .status.sucesso { background: #e7f6ef; color: var(--sucesso); border: 1px solid #c0e6d2; }
+    .status.erro { background: #fdebea; color: var(--erro); border: 1px solid #f2c8c6; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--cinza);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--cinza);
+    }
+
+    th { background: #f5f7fb; color: #3a4a5a; }
+    tr:last-child td { border-bottom: none; }
+
+    .empty {
+      text-align: center;
+      padding: 24px 12px;
+      color: #6a7684;
+    }
+
+    .acoes {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #eef4ff;
+      color: #2f5da8;
+      font-weight: 600;
+      border: 1px solid #d8e4ff;
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 640px) {
+      th, td { font-size: 0.88rem; }
+      .topbar { padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="logo">C&amp;H</div>
+      <div class="titulo">
+        <h1>Agenda da Clínica Consciência &amp; Harmonia</h1>
+        <span>Agendamento manual, controle rápido e exportação em CSV</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="grid">
+      <article class="card" id="login-card">
+        <h2>Login seguro</h2>
+        <p style="margin: 0 0 12px; color: #4c5b6b;">Use as credenciais da recepção para liberar a agenda.</p>
+        <form id="loginForm">
+          <label>E-mail institucional
+            <input id="email" name="email" type="email" placeholder="recepcao@harmonia.com" required />
+          </label>
+          <label>Senha
+            <input id="senha" name="senha" type="password" placeholder="••••••••" required />
+          </label>
+          <button type="submit">Entrar e acessar agenda</button>
+        </form>
+        <div id="loginStatus" class="status hidden"></div>
+        <div style="margin-top: 12px; color: #526274; font-size: 0.92rem;">
+          Dica: usuários padrão <strong>recepcao@harmonia.com</strong> / <strong>agenda123</strong>.
+        </div>
+      </article>
+
+      <article class="card hidden" id="agenda-card">
+        <h2>Cadastro manual de horário</h2>
+        <form id="agendaForm">
+          <label>Data
+            <input type="date" id="data" required />
+          </label>
+          <label>Horário
+            <input type="time" id="hora" required />
+          </label>
+          <label>Paciente / Cliente
+            <input type="text" id="paciente" placeholder="Nome completo" required />
+          </label>
+          <label>Serviço
+            <select id="servico" required>
+              <option value="">Selecione</option>
+              <option>Consulta clínica</option>
+              <option>Retorno</option>
+              <option>Terapia</option>
+              <option>Avaliação inicial</option>
+            </select>
+          </label>
+          <label>Observações
+            <textarea id="observacoes" rows="2" placeholder="Informações úteis (condução, alergias, forma de pagamento)"></textarea>
+          </label>
+          <button type="submit">Adicionar horário</button>
+        </form>
+        <div class="acoes">
+          <button class="btn-secondary" id="logoutBtn">Sair</button>
+          <button id="exportBtn">Baixar agenda em CSV</button>
+          <span class="badge" id="contagem">0 horários agendados</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="card hidden" id="tabela-card">
+      <h2>Agenda do dia</h2>
+      <div class="status" id="mensagem" style="display: none;"></div>
+      <div class="table-wrapper">
+        <table id="agendaTabela" aria-label="Agenda da clínica">
+          <thead>
+            <tr>
+              <th style="width: 110px;">Data</th>
+              <th style="width: 90px;">Hora</th>
+              <th>Paciente</th>
+              <th>Serviço</th>
+              <th>Observações</th>
+            </tr>
+          </thead>
+          <tbody id="agendaBody">
+            <tr class="empty"><td colspan="5">Nenhum horário cadastrado ainda.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const credenciais = {
+      email: "recepcao@harmonia.com",
+      senha: "agenda123",
+    };
+
+    const state = {
+      autenticado: false,
+      agenda: [],
+    };
+
+    const storageKey = "agenda-harmonia";
+
+    function carregarAgenda() {
+      const salvo = localStorage.getItem(storageKey);
+      if (!salvo) return;
+      try {
+        const dados = JSON.parse(salvo);
+        if (Array.isArray(dados)) {
+          state.agenda = dados;
+        }
+      } catch (e) {
+        console.error("Erro ao ler agenda do storage", e);
+      }
+    }
+
+    function salvarAgenda() {
+      localStorage.setItem(storageKey, JSON.stringify(state.agenda));
+    }
+
+    function ordenarAgenda() {
+      state.agenda.sort((a, b) => {
+        const dataA = new Date(`${a.data}T${a.hora}`);
+        const dataB = new Date(`${b.data}T${b.hora}`);
+        return dataA - dataB;
+      });
+    }
+
+    function atualizarTabela() {
+      const tbody = document.getElementById("agendaBody");
+      tbody.innerHTML = "";
+      if (state.agenda.length === 0) {
+        tbody.innerHTML = '<tr class="empty"><td colspan="5">Nenhum horário cadastrado ainda.</td></tr>';
+        document.getElementById("contagem").textContent = "0 horários agendados";
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      state.agenda.forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.data.split('-').reverse().join('/')}</td>
+          <td>${item.hora}</td>
+          <td>${item.paciente}</td>
+          <td>${item.servico}</td>
+          <td>${item.observacoes || "-"}</td>
+        `;
+        fragment.appendChild(tr);
+      });
+      tbody.appendChild(fragment);
+      document.getElementById("contagem").textContent = `${state.agenda.length} horário${state.agenda.length > 1 ? 's' : ''} agendado${state.agenda.length > 1 ? 's' : ''}`;
+    }
+
+    function mostrarMensagem(texto, tipo = "sucesso") {
+      const msg = document.getElementById("mensagem");
+      msg.textContent = texto;
+      msg.className = `status ${tipo}`;
+      msg.style.display = "block";
+      setTimeout(() => msg.style.display = "none", 4200);
+    }
+
+    function atualizarVisibilidade() {
+      document.getElementById("login-card").classList.toggle("hidden", state.autenticado);
+      document.getElementById("agenda-card").classList.toggle("hidden", !state.autenticado);
+      document.getElementById("tabela-card").classList.toggle("hidden", !state.autenticado);
+    }
+
+    function autenticar(event) {
+      event.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+      const status = document.getElementById("loginStatus");
+
+      if (email === credenciais.email && senha === credenciais.senha) {
+        state.autenticado = true;
+        status.textContent = "Acesso liberado. Você já pode cadastrar horários.";
+        status.className = "status sucesso";
+        status.classList.remove("hidden");
+        atualizarVisibilidade();
+      } else {
+        status.textContent = "Credenciais inválidas. Verifique e tente novamente.";
+        status.className = "status erro";
+        status.classList.remove("hidden");
+      }
+    }
+
+    function adicionarHorario(event) {
+      event.preventDefault();
+      const data = document.getElementById("data").value;
+      const hora = document.getElementById("hora").value;
+      const paciente = document.getElementById("paciente").value.trim();
+      const servico = document.getElementById("servico").value;
+      const observacoes = document.getElementById("observacoes").value.trim();
+
+      if (!data || !hora || !paciente || !servico) {
+        mostrarMensagem("Preencha todos os campos obrigatórios para salvar.", "erro");
+        return;
+      }
+
+      state.agenda.push({ data, hora, paciente, servico, observacoes });
+      ordenarAgenda();
+      salvarAgenda();
+      atualizarTabela();
+      mostrarMensagem("Horário adicionado com sucesso!");
+      document.getElementById("agendaForm").reset();
+    }
+
+    function logout() {
+      state.autenticado = false;
+      atualizarVisibilidade();
+      mostrarMensagem("Sessão encerrada. Faça login para acessar novamente.", "erro");
+    }
+
+    function exportarCSV() {
+      if (state.agenda.length === 0) {
+        mostrarMensagem("Nenhum horário para exportar.", "erro");
+        return;
+      }
+
+      const linhas = ["Data,Hora,Paciente,Serviço,Observações"]; 
+      state.agenda.forEach((item) => {
+        const valores = [
+          item.data,
+          item.hora,
+          `"${item.paciente.replace(/"/g, '""')}"`,
+          `"${item.servico.replace(/"/g, '""')}"`,
+          `"${(item.observacoes || "").replace(/"/g, '""')}"`,
+        ];
+        linhas.push(valores.join(","));
+      });
+
+      const conteudo = linhas.join("\n");
+      const blob = new Blob([conteudo], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const dataAtual = new Date().toISOString().split("T")[0];
+      link.href = url;
+      link.download = `agenda-harmonia-${dataAtual}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+      mostrarMensagem("Arquivo CSV gerado para download.");
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", autenticar);
+    document.getElementById("agendaForm").addEventListener("submit", adicionarHorario);
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+    document.getElementById("exportBtn").addEventListener("click", exportarCSV);
+
+    carregarAgenda();
+    ordenarAgenda();
+    atualizarTabela();
+  </script>
+</body>
+</html>
